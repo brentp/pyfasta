@@ -1,0 +1,45 @@
+Changes
+=======
+0.3.9
+-----
+* only require 'r' (not r+) for memory map.
+
+0.3.8
+-----
+* clean up logic for mixing inplace/non-inplace flattened files.
+  if the inplace is available, it is always used. 
+
+0.3.6/7
+-------
+* dont re-flatten the file every time!
+* allow spaces before and after the header in the orginal fasta.
+
+0.3.5
+-----
+
+* update docs in README.txt for new CLI stuff.
+* allow flattening inplace.
+* get rid of memmap (results in faster parsing).
+
+0.3.4
+-----
+
+* restore python2.5 compatiblity.
+* CLI: add ability to exclude sequence from extract
+* CLI: allow spliting based on header.
+
+0.3.3
+-----
+
+* include this file in the tar ball (thanks wen h.)
+
+0.3.2
+-----
+
+* separate out backends into records.py
+
+* use nosetests (python setup.py nosetests)
+
+* add a TCRecord backend for next-gen sequencing availabe if tc is (easy-)installed.
+
+* improve test coverage.
