@@ -8,7 +8,7 @@ setup(name='pyfasta',
       description=\
         "fast, memory-efficient, pythonic (and command-line) access to fasta sequence files",
       url="http://bitbucket.org/brentp/biostuff/",
-      long_description=open('README.txt').read() + "\n" + open('CHANGELOG.txt').read(),
+      long_description=open('README.rst').read() + "\n" + open('CHANGELOG.txt').read(),
       classifiers=["Topic :: Scientific/Engineering :: Bio-Informatics"],
       keywords='bioinformatics blast fasta',
       author='brentp',
