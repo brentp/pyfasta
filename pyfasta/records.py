@@ -221,6 +221,10 @@ class NpyFastaRecord(FastaRecord):
 
 
 class MemoryRecord(FastaRecord):
+    """
+    dont write anything to disk, just read the whole thing
+    into memory
+    """
     @classmethod
     def prepare(klass, fasta_obj, seqinfo_generator, flatten_inplace=False):
         f = fasta_obj.fasta_name
@@ -228,7 +232,7 @@ class MemoryRecord(FastaRecord):
         idx = {}
         for seqid, seq in seqinfo_generator:
             seqs[seqid] = (seq, None)
-            
+
         return seqs, seqs
 
     def __init__(self, _, seq, _none):

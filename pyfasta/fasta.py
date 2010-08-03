@@ -85,7 +85,7 @@ class Fasta(dict):
 
     def keys(self):
         return self.index.keys()
-    
+
     def __contains__(self, key):
         return key in self.index
 
