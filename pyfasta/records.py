@@ -44,7 +44,7 @@ class FastaRecord(object):
         """
         f = fasta_obj.fasta_name
         if klass.is_current(f):
-            fh = open(f + klass.idx)
+            fh = open(f + klass.idx, 'rb')
             idx = cPickle.load(fh)
             fh.close()
             if flatten_inplace or ext_is_flat(f + klass.ext): flat = klass.modify_flat(f)
