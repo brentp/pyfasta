@@ -177,13 +177,13 @@ class FastaRecord(object):
 
 
 class NpyFastaRecord(FastaRecord):
-    __slots__ = ('start', 'stop', 'mm', 'tostring')
+    __slots__ = ('start', 'stop', 'mm', 'as_string')
 
-    def __init__(self, mm, start, stop, tostring=True):
+    def __init__(self, mm, start, stop, as_string=True):
         self.mm = mm
         self.start = start
         self.stop = stop
-        self.tostring = tostring
+        self.as_string = as_string
 
     def __repr__(self):
         return "%s(%i..%i)" % (self.__class__.__name__,
@@ -208,7 +208,7 @@ class NpyFastaRecord(FastaRecord):
 
     def __getitem__(self, islice):
         d = self.getdata(islice)
-        return d.tostring() if self.tostring else d
+        return d.tostring() if self.as_string else d
 
     @property
     def __array_interface__(self):
