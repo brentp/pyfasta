@@ -43,6 +43,8 @@ def test_classes():
 
             del f
 
+            yield check_keyfn, 'tests/data/key.fasta', klass, inplace
+
             yield check_reload, klass, fasta_name
 
             _cleanup()
@@ -51,6 +53,24 @@ def test_classes():
 def check_keys(f):
     assert sorted(f.keys()) == ['chr1', 'chr2', 'chr3']
     assert sorted(f.iterkeys()) == ['chr1', 'chr2', 'chr3']
+
+def fix(path):
+    import os.path as op
+
+    for ext in (".gdx", ".flat"):
+        if op.exists(path + ext):
+            os.unlink(path + ext)
+
+    shutil.copyfile(path + ".orig", path)
+
+def check_keyfn(path, klass, inplace):
+    f = Fasta(path, record_class=klass, flatten_inplace=inplace, key_fn=lambda key: key.split()[0])
+    assert sorted(f.keys()) == ['a', 'b', 'c'], f.keys()
+    fix(path)
+    ff = Fasta(path, record_class=klass, flatten_inplace=inplace)
+    assert sorted(ff.keys()) == ['a extra', 'b extra', 'c extra'], (ff.keys(), klass)
+    fix(path)
+
 
 def check_reload(klass, fasta_name):
 

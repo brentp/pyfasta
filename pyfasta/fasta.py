@@ -11,7 +11,7 @@ class FastaNotFound(Exception): pass
 
 class Fasta(dict):
     def __init__(self, fasta_name, record_class=NpyFastaRecord,
-                flatten_inplace=False):
+                flatten_inplace=False, key_fn=None):
         """
             >>> from pyfasta import Fasta, FastaRecord
 
@@ -37,8 +37,9 @@ class Fasta(dict):
             raise FastaNotFound('"' + fasta_name + '"')
         self.fasta_name = fasta_name
         self.record_class = record_class
+        self.key_fn = key_fn
         self.index, self.prepared = self.record_class.prepare(self,
-                                              self.gen_seqs_with_headers(),
+                                              self.gen_seqs_with_headers(key_fn),
                                               flatten_inplace)
 
         self.chr = {}
@@ -52,7 +53,7 @@ class Fasta(dict):
             yield i, seq[i:i + k]
             i += k - overlap
 
-    def gen_seqs_with_headers(self):
+    def gen_seqs_with_headers(self, key_fn=None):
         """remove all newlines from the sequence in a fasta file
         and generate starts, stops to be used by the record class"""
         fh = open(self.fasta_name, 'r')
@@ -68,6 +69,8 @@ class Fasta(dict):
                     yield header, "".join(seqs)
 
                 header = line[1:].strip()
+                if key_fn is not None:
+                    header = key_fn(header)
                 seqs = []
             else:
                 seqs.append(line)
@@ -91,6 +94,8 @@ class Fasta(dict):
 
     def __getitem__(self, i):
         # this implements the lazy loading
+        if self.key_fn is not None:
+            i = self.key_fn(i)
         if i in self.chr:
             return self.chr[i]
 
