@@ -113,13 +113,17 @@ def extract(args):
     parser.add_option("--exclude", dest="exclude", help="extract all sequences EXCEPT those listed", action="store_true", default=False)
     parser.add_option("--file", dest="file", help=\
                       "if this flag is used, the sequences to extract" \
-                      "are read from the file specified in args"
+                      " are read from the file specified in args"
                       , action="store_true", default=False)
+    parser.add_option("--space", dest="space", action="store_true", help=\
+                      "use the fasta identifier only up to the space as the key",
+                      default=False)
     options, seqs = parser.parse_args(args)
     if not (options.fasta and len(seqs)):
         sys.exit(parser.print_help())
 
-    f = Fasta(options.fasta)
+    key_fn = lambda k: k.split()[0] if p.space else None
+    f = Fasta(options.fasta, key_fn=key_fn)
     if options.file:
         seqs = (x.strip() for x in open(seqs[0]))
     if options.exclude:

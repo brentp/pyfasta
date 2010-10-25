@@ -54,6 +54,16 @@ Slicing
     >>> f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9, 'strand': '-'})
     'TCAGTCAG'
 
+Key Function
+------------
+Sometimes your fasta will have a long header like: "AT1G51370.2 | Symbols:  | F-box family protein | chr1:19045615-19046748 FORWARD" when you only want to key off: "AT1G51370.2". In this case, specify the key_fn argument to the constructor:
+
+::
+
+    >>> fkey = Fasta('tests/data/key.fasta', key_fn=lambda key: key.split()[0])
+    >>> sorted(fkey.keys())
+    ['a', 'b', 'c']
+
 Numpy
 =====
 
@@ -166,6 +176,9 @@ a new fasta file. the args are a list of sequences to extract.
 
   $ pyfasta extract --header --fasta input.fasta --exclude --file seqids_to_exclude.txt
 
+**extract** sequence from a fasta file with complex keys where we only want to lookup based on the part before the space.
+
+  $ pyfasta extract --header --fasta input.with.keys.fasta --space --file seqids.txt
 
 **flatten** a file inplace, for faster later use by pyfasta, and without creating another copy. (`Flattening`_)
 
