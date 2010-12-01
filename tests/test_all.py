@@ -1,6 +1,8 @@
 from pyfasta import Fasta
 from pyfasta.records import NpyFastaRecord, MemoryRecord, FastaRecord
 record_classes = [NpyFastaRecord, MemoryRecord, FastaRecord]
+from pyfasta import DuplicateHeaderException
+
 try:
     from pyfasta.records import TCRecord
     record_classes.append(TCRecord)
@@ -14,7 +16,7 @@ import numpy as np
 import glob
 
 def _cleanup():
-    for f in glob.glob("tests/data/three_chrs.fasta*"):
+    for f in glob.glob("tests/data/three_chrs.fasta*") + glob.glob('tests/data/dups.fasta.*'):
         if f.endswith(".orig"): continue
         os.unlink(f)
     shutil.copyfile('tests/data/three_chrs.fasta.orig', 'tests/data/three_chrs.fasta')
@@ -47,7 +49,15 @@ def test_classes():
 
             yield check_reload, klass, fasta_name
 
+            yield check_duplicates, klass, inplace
+
             _cleanup()
+
+
+def check_duplicates(klass, inplace):
+    assert_raises(DuplicateHeaderException,
+                  lambda: Fasta('tests/data/dups.fasta',
+                                record_class=klass, flatten_inplace=inplace))
 
 
 def check_keys(f):

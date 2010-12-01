@@ -1,5 +1,5 @@
 import sys
-from fasta import Fasta, complement
+from fasta import Fasta, complement, DuplicateHeaderException
 from records import *
 from split_fasta import split
 import optparse

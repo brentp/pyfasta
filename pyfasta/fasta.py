@@ -9,6 +9,10 @@ complement  = lambda s: s.translate(_complement)
 
 class FastaNotFound(Exception): pass
 
+class DuplicateHeaderException(Exception):
+    def __init__(self, header):
+        Exception.__init__(self, 'headers must be unique: %s is duplicated' % header)
+
 class Fasta(dict):
     def __init__(self, fasta_name, record_class=NpyFastaRecord,
                 flatten_inplace=False, key_fn=None):
@@ -58,7 +62,8 @@ class Fasta(dict):
         and generate starts, stops to be used by the record class"""
         fh = open(self.fasta_name, 'r')
         # do the flattening (remove newlines)
-        idx = {}
+        # check of unique-ness of headers.
+        seen_headers = {}
         header = None
         seqs = None
         for line in fh:
@@ -66,6 +71,9 @@ class Fasta(dict):
             if not line: continue
             if line[0] == ">":
                 if seqs is not None:
+                    if header in seen_headers:
+                        raise DuplicateHeaderException(header)
+                    seen_headers[header] = None
                     yield header, "".join(seqs)
 
                 header = line[1:].strip()
@@ -76,6 +84,8 @@ class Fasta(dict):
                 seqs.append(line)
 
         if seqs != []:
+            if header in seen_headers:
+                raise DuplicateHeaderException(header)
             yield header, "".join(seqs)
         fh.close()
 
