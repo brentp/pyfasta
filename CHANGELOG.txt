@@ -1,5 +1,9 @@
 Changes
 =======
+0.4.1
+-----
+check for duplicate headers.
+
 0.4.0
 -----
 * add key_fn kwarg to constuctor
