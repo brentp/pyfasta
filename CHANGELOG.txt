@@ -1,5 +1,9 @@
 Changes
 =======
+0.4.2
+-----
+update for latest numpy (can't close memmap)
+
 0.4.1
 -----
 check for duplicate headers.

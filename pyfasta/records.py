@@ -50,7 +50,7 @@ class FastaRecord(object):
             if flatten_inplace or ext_is_flat(f + klass.ext): flat = klass.modify_flat(f)
             else: flat = klass.modify_flat(f + klass.ext)
             if flatten_inplace and not ext_is_flat(f + klass.ext):
-                flat.close()
+                del flat
             else:
                 return idx, flat
 
