@@ -114,7 +114,7 @@ class Fasta(dict):
         return self.chr[i]
 
     def sequence(self, f, asstring=True, auto_rc=True
-            , exon_keys=None):
+            , exon_keys=None, one_based=True):
         """
         take a feature and use the start/stop or exon_keys to return
         the sequence from the assocatied fasta file:
@@ -123,6 +123,8 @@ class Fasta(dict):
                 : if false, return as a numpy array
         auto_rc : if True and the strand of the feature == -1, return
                   the reverse complement of the sequence
+        one_based: if true, query is using 1 based closed intervals, if false
+                    semi-open zero based intervals
 
             >>> from pyfasta import Fasta
             >>> f = Fasta('tests/data/three_chrs.fasta')
@@ -180,10 +182,11 @@ class Fasta(dict):
         fasta    = self[f['chr']]
         sequence = None
         if not exon_keys is None:
-            sequence = self._seq_from_keys(f, fasta, exon_keys)
+            sequence = self._seq_from_keys(f, fasta, exon_keys, one_based=one_based)
 
         if sequence is None:
-            sequence = fasta[(f['start'] - 1): f['stop']]
+            start = f['start'] - int(one_based) 
+            sequence = fasta[start: f['stop']]
 
         if auto_rc and f.get('strand') in (-1, '-1', '-'):
             sequence = complement(sequence)[::-1]
@@ -191,7 +194,7 @@ class Fasta(dict):
         if asstring: return sequence
         return np.array(sequence, dtype='c')
 
-    def _seq_from_keys(self, f, fasta, exon_keys, base='locations'):
+    def _seq_from_keys(self, f, fasta, exon_keys, base='locations', one_based=True):
         """Internal:
         f: a feature dict
         fasta: a Fasta object
@@ -209,7 +212,7 @@ class Fasta(dict):
             locs = fbase[ek]
             seq = ""
             for start, stop in locs:
-                seq += fasta[start -1:stop]
+                seq += fasta[start - int(one_based):stop]
             return seq
         return None
 

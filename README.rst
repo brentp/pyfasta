@@ -42,13 +42,17 @@ Slicing
     >>> f['chr1'][::3]
     'AGTCAGTCAGTCAGTCAGTCAGTCAGT'
 
-    # can query by a 'feature' dictionary
+    # can query by a 'feature' dictionary (note this is one based coordinates)
     >>> f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9})
     'CTGACTGA'
 
     # same as:
     >>> f['chr1'][1:9]
     'CTGACTGA'
+
+    # use python, zero based coords
+    >>> f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9}, one_based=False)
+    'TGACTGA'
 
     # with reverse complement (automatic for - strand)
     >>> f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9, 'strand': '-'})
