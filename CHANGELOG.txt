@@ -1,5 +1,9 @@
 Changes
 =======
+0.4.3
+-----
+Add 0 or 1-based intervals in sequence() thanks @jamescasbon
+
 0.4.2
 -----
 update for latest numpy (can't close memmap)
