@@ -185,7 +185,7 @@ class Fasta(dict):
             sequence = self._seq_from_keys(f, fasta, exon_keys)
 
         if sequence is None:
-            start = (f['start'] - 1) if one_based else f['start'] 
+            start = f['start'] - int(one_based) 
             sequence = fasta[start: f['stop']]
 
         if auto_rc and f.get('strand') in (-1, '-1', '-'):

@@ -40,6 +40,7 @@ def test_classes():
             yield check_full_slice, f
             yield check_array_copy, f
             yield check_array, f
+            yield check_one_based, f
 
             fasta_name = f.fasta_name
 
@@ -234,6 +235,9 @@ def check_array_copy(f):
 
     assert a[1:5].tostring() == 'NNNN', a[1:5].tostring()
 
+def check_one_based(f):
+    assert f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9})  == 'CTGACTGA'
+    assert f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9}, one_based=False) == 'TGACTGA'
 
 if __name__ == "__main__":
     import nose
