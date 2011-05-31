@@ -114,7 +114,7 @@ class Fasta(dict):
         return self.chr[i]
 
     def sequence(self, f, asstring=True, auto_rc=True
-            , exon_keys=None):
+            , exon_keys=None, one_based=True):
         """
         take a feature and use the start/stop or exon_keys to return
         the sequence from the assocatied fasta file:
@@ -123,6 +123,8 @@ class Fasta(dict):
                 : if false, return as a numpy array
         auto_rc : if True and the strand of the feature == -1, return
                   the reverse complement of the sequence
+        one_based: if true, query is using 1 based closed intervals, if false
+                    semi-open zero based intervals
 
             >>> from pyfasta import Fasta
             >>> f = Fasta('tests/data/three_chrs.fasta')
@@ -183,7 +185,8 @@ class Fasta(dict):
             sequence = self._seq_from_keys(f, fasta, exon_keys)
 
         if sequence is None:
-            sequence = fasta[(f['start'] - 1): f['stop']]
+            start = (f['start'] - 1) if one_based else f['start'] 
+            sequence = fasta[start: f['stop']]
 
         if auto_rc and f.get('strand') in (-1, '-1', '-'):
             sequence = complement(sequence)[::-1]
