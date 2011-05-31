@@ -182,7 +182,7 @@ class Fasta(dict):
         fasta    = self[f['chr']]
         sequence = None
         if not exon_keys is None:
-            sequence = self._seq_from_keys(f, fasta, exon_keys)
+            sequence = self._seq_from_keys(f, fasta, exon_keys, one_based=one_based)
 
         if sequence is None:
             start = f['start'] - int(one_based) 
@@ -194,7 +194,7 @@ class Fasta(dict):
         if asstring: return sequence
         return np.array(sequence, dtype='c')
 
-    def _seq_from_keys(self, f, fasta, exon_keys, base='locations'):
+    def _seq_from_keys(self, f, fasta, exon_keys, base='locations', one_based=True):
         """Internal:
         f: a feature dict
         fasta: a Fasta object
@@ -212,7 +212,7 @@ class Fasta(dict):
             locs = fbase[ek]
             seq = ""
             for start, stop in locs:
-                seq += fasta[start -1:stop]
+                seq += fasta[start - int(one_based):stop]
             return seq
         return None
 
