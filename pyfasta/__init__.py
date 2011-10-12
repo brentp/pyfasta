@@ -122,7 +122,7 @@ def extract(args):
     if not (options.fasta and len(seqs)):
         sys.exit(parser.print_help())
 
-    key_fn = lambda k: k.split()[0] if options.space else None
+    key_fn = (lambda k: k.split()[0]) if options.space else None
     f = Fasta(options.fasta, key_fn=key_fn)
     if options.file:
         seqs = (x.strip() for x in open(seqs[0]))

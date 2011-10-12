@@ -48,3 +48,10 @@ then
 fi
 
 rm -f tests/data/three_chrs.fasta.{flat,gdx}
+
+C=$(python pyfasta/__init__.py extract --fasta tests/data/key.fasta "a extra")
+if [ $C != "a" ]
+then
+    echo "BADD"
+fi
+rm -f tests/data/key.fasta.{flat,gdx}
