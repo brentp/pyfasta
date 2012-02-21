@@ -45,7 +45,8 @@ def newnames(oldname, n, kmers=None, overlap=None, header=None):
     if n == 1:
         names = [pattern % "split"]
     else:
-        names = [pattern % string.letters[i] for i in range(n)]
+        width = len(str(n))
+        names = [pattern % str(i).rjust(width, '0') for i in range(n)]
     print >>sys.stderr, "creating new files:"
     print >>sys.stderr, "\n".join(names)
     return names

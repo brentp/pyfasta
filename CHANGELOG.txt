@@ -1,5 +1,9 @@
 Changes
 =======
+0.4.5
+-----
+pyfasta split can handle > 52 files. (thanks Devtulya)
+
 0.4.4
 -----
 fix pyfasta extract
