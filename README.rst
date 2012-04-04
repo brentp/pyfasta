@@ -31,9 +31,16 @@ Usage
     NpyFastaRecord(0..80)
 
 
+
 Slicing
 -------
 ::
+
+    # get full the sequence:
+    >>> a = str(f['chr1'])
+    >>> b = f['chr1'][:]
+    >>> a == b
+    True
 
     >>> f['chr1'][:10]
     'ACTGACTGAC'
@@ -75,7 +82,7 @@ The default is to use a memmaped numpy array as the backend. In which case it's 
 get back an array directly...
 ::
 
-    >>> f['chr1'].tostring = False
+    >>> f['chr1'].as_string = False
     >>> f['chr1'][:10] # doctest: +NORMALIZE_WHITESPACE
     memmap(['A', 'C', 'T', 'G', 'A', 'C', 'T', 'G', 'A', 'C'], dtype='|S1')
 
