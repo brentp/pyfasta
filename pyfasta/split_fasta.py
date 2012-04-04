@@ -13,16 +13,16 @@ def newnames(oldname, n, kmers=None, overlap=None, header=None):
     ['some.split.fasta']
 
     >>> newnames('some.fasta', 2)
-    ['some.a.fasta', 'some.b.fasta']
+    ['some.0.fasta', 'some.1.fasta']
 
     >>> newnames('some', 2)
-    ['some.a', 'some.b']
+    ['some.0', 'some.1']
 
     >>> newnames('some.fasta', 2, kmers=1000)
-    ['some.a.1Kmer.fasta', 'some.b.1Kmer.fasta']
+    ['some.0.1Kmer.fasta', 'some.1.1Kmer.fasta']
 
     >>> newnames('some.fasta', 2, kmers=10000, overlap=2000)
-    ['some.a.10Kmer.2Koverlap.fasta', 'some.b.10Kmer.2Koverlap.fasta']
+    ['some.0.10Kmer.2Koverlap.fasta', 'some.1.10Kmer.2Koverlap.fasta']
 
     >>> newnames('some.fasta', 1, kmers=100000, overlap=2000)
     ['some.split.100Kmer.2Koverlap.fasta']
@@ -74,7 +74,7 @@ def split(args):
     parser = optparse.OptionParser("""\
    split a fasta file into separated files.
         pyfasta split -n 6 [-k 5000 ] some.fasta
-    the output will be some.1.fasta, some.2.fasta ... some.6.fasta
+    the output will be some.0.fasta, some.1.fasta ... some.6.fasta
     the sizes will be as even as reasonable.
    """)
     parser.add_option("--header", dest="header", metavar="FILENAME_FMT",
