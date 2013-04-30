@@ -131,18 +131,17 @@ def with_header_names(f, names):
     split the fasta into the files in fhs by headers.
     """
     for seqid, name in names.iteritems():
-        fh = open(name, 'wb')
-        print >>fh, ">%s" % seqid
-        print >>fh, str(f[seqid])
-        fh.close()
+        with open(name, 'w') as fh:
+            print >>fh, ">%s" % seqid
+            print >>fh, str(f[seqid])
 
 def with_kmers(f, names, k, overlap):
     """
-    split the sequences in Fasta object `f` into pieces of length `k` 
+    split the sequences in Fasta object `f` into pieces of length `k`
     with the given `overlap` the results are written to the array of files
     `fhs`
     """
-    fhs = [open(name, 'wb') for name in names]
+    fhs = [open(name, 'w') for name in names]
     i = 0
     for seqid in f.iterkeys():
         seq = f[seqid]
@@ -152,6 +151,8 @@ def with_kmers(f, names, k, overlap):
             print >>fh, ">%s" % format_kmer(seqid, start0)
             print >>fh, subseq
             i += 1
+    for fh in fhs:
+        fh.close()
 
 def without_kmers(f, names):
     """
@@ -159,7 +160,7 @@ def without_kmers(f, names):
     but attempts to distribute the sequences in Fasta object `f` evenly
     among the file handles in fhs.
     """
-    fhs = [open(name, 'wb') for name in names]
+    fhs = [open(name, 'w') for name in names]
     name2fh = dict([(fh.name, fh) for fh in fhs])
     items = sorted([(key, len(f[key])) for key in f.iterkeys()],
                    key=operator.itemgetter(1))
@@ -211,6 +212,9 @@ def without_kmers(f, names):
     if l0 == l1:
         fh = fhs[l0 % len(fhs)]
         print_to_fh(fh, f, lens, items[l0])
+
+    for fh in fhs:
+        fh.close()
 
 
 def find_name_from_len(lmin, lens):
