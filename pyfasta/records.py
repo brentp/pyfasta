@@ -208,15 +208,19 @@ class NpyFastaRecord(FastaRecord):
 
     def __getitem__(self, islice):
         d = self.getdata(islice)
-        return d.tostring() if self.as_string else d
+        return d.tostring().decode() if self.as_string else d
 
     @property
     def __array_interface__(self):
+        old_as_string = self.as_string
+        self.as_string = False
+        data = self[:]
+        self.as_string = old_as_string
         return {
             'shape': (len(self), ),
             'typestr': '|S1',
             'version': 3,
-            'data': self[:]
+            'data': data,
         }
 
 
