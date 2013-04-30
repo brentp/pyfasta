@@ -12,9 +12,8 @@ def is_up_to_date(a, b):
 
 
 def ext_is_flat(ext):
-    fh = open(ext)
-    t = fh.read(len(MAGIC))
-    fh.close()
+    with open(ext) as fh:
+        t = fh.read(len(MAGIC))
     return MAGIC == t
 
 class FastaRecord(object):
@@ -44,9 +43,8 @@ class FastaRecord(object):
         """
         f = fasta_obj.fasta_name
         if klass.is_current(f):
-            fh = open(f + klass.idx, 'rb')
-            idx = cPickle.load(fh)
-            fh.close()
+            with open(f + klass.idx, 'rb') as fh:
+                idx = cPickle.load(fh)
             if flatten_inplace or ext_is_flat(f + klass.ext): flat = klass.modify_flat(f)
             else: flat = klass.modify_flat(f + klass.ext)
             if flatten_inplace and not ext_is_flat(f + klass.ext):
@@ -55,29 +53,26 @@ class FastaRecord(object):
                 return idx, flat
 
         idx = {}
-        flatfh = open(f + klass.ext, 'w')
-        for i, (seqid, seq) in enumerate(seqinfo_generator):
-            if flatten_inplace:
-                if i == 0:
-                    flatfh.write('>%s\n' % seqid)
-                else:
-                    flatfh.write('\n>%s\n' % seqid)
-            start = flatfh.tell()
-            flatfh.write(seq)
-            stop = flatfh.tell() 
-            idx[seqid] = (start, stop)
-        flatfh.close()
-            
+        with open(f + klass.ext, 'w') as flatfh:
+            for i, (seqid, seq) in enumerate(seqinfo_generator):
+                if flatten_inplace:
+                    if i == 0:
+                        flatfh.write('>%s\n' % seqid)
+                    else:
+                        flatfh.write('\n>%s\n' % seqid)
+                start = flatfh.tell()
+                flatfh.write(seq)
+                stop = flatfh.tell()
+                idx[seqid] = (start, stop)
+
         if flatten_inplace:
             klass.copy_inplace(flatfh.name, f)
-            fh = open(f + klass.idx, 'wb')
-            cPickle.dump(idx, fh, -1)
-            fh.close()
+            with open(f + klass.idx, 'wb') as fh:
+                cPickle.dump(idx, fh, -1)
             return idx, klass.modify_flat(f)
 
-        fh = open(f + klass.idx, 'wb')
-        cPickle.dump(idx, fh, -1)
-        fh.close()
+        with open(f + klass.idx, 'wb') as fh:
+            cPickle.dump(idx, fh, -1)
         return idx, klass.modify_flat(f + klass.ext)
 
     @classmethod
