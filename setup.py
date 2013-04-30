@@ -3,6 +3,15 @@ from setuptools import setup, find_packages
 
 version = '0.4.5'
 
+# Run 2to3 builder if we're on Python 3.x, from
+#   http://wiki.python.org/moin/PortingPythonToPy3k
+try:
+    from distutils.command.build_py import build_py_2to3 as build_py
+except ImportError:
+    # 2.x
+    from distutils.command.build_py import build_py
+command_classes = {'build_py': build_py}
+
 setup(name='pyfasta',
       version=version,
       description=\
@@ -27,4 +36,5 @@ setup(name='pyfasta',
       entry_points={
       'console_scripts': ['pyfasta = pyfasta:main']
       },
+      cmdclass=command_classes,
   )
