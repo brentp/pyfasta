@@ -143,8 +143,8 @@ class Fasta(dict):
             >>> f.sequence({'start':1, 'stop':2, 'strand': -1, 'chr': 'chr1'})
             'GT'
 
-            >>> f.index
-            {'chr3': (160, 3760), 'chr2': (80, 160), 'chr1': (0, 80)}
+            >>> sorted(f.index.items())
+            [('chr1', (0, 80)), ('chr2', (80, 160)), ('chr3', (160, 3760))]
 
         NOTE: these 2 are reverse-complement-ary because of strand
         #>>> f.sequence({'start':10, 'stop':12, 'strand': -1, 'chr': 'chr1'})
