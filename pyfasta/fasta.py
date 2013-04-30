@@ -4,7 +4,16 @@ import numpy as np
 
 from records import NpyFastaRecord
 
-_complement = string.maketrans('ATCGatcgNnXx', 'TAGCtagcNnXx')
+# string.maketrans is bytes.maketrans in Python 3, but
+# we want to deal with strings instead of bytes
+try:
+    # 2.x
+    maketrans = string.maketrans
+except AttributeError:
+    # 3.x
+    maketrans = str.maketrans
+
+_complement = maketrans('ATCGatcgNnXx', 'TAGCtagcNnXx')
 complement  = lambda s: s.translate(_complement)
 
 class FastaNotFound(Exception): pass
