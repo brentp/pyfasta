@@ -1,10 +1,20 @@
 import string
 import os.path
+from collections import Mapping
 import numpy as np
 
 from records import NpyFastaRecord
 
-_complement = string.maketrans('ATCGatcgNnXx', 'TAGCtagcNnXx')
+# string.maketrans is bytes.maketrans in Python 3, but
+# we want to deal with strings instead of bytes
+try:
+    # 2.x
+    maketrans = string.maketrans
+except AttributeError:
+    # 3.x
+    maketrans = str.maketrans
+
+_complement = maketrans('ATCGatcgNnXx', 'TAGCtagcNnXx')
 complement  = lambda s: s.translate(_complement)
 
 class FastaNotFound(Exception): pass
@@ -13,7 +23,7 @@ class DuplicateHeaderException(Exception):
     def __init__(self, header):
         Exception.__init__(self, 'headers must be unique: %s is duplicated' % header)
 
-class Fasta(dict):
+class Fasta(Mapping):
     def __init__(self, fasta_name, record_class=NpyFastaRecord,
                 flatten_inplace=False, key_fn=None):
         """
@@ -93,14 +103,8 @@ class Fasta(dict):
         # might not work for all backends?
         return len(self.index)
 
-    def iterkeys(self):
-        for k in self.index.iterkeys(): yield k
-
-    def keys(self):
-        return self.index.keys()
-
-    def __contains__(self, key):
-        return key in self.index
+    def __iter__(self):
+        return iter(self.index)
 
     def __getitem__(self, i):
         # this implements the lazy loading
@@ -134,8 +138,8 @@ class Fasta(dict):
             >>> f.sequence({'start':1, 'stop':2, 'strand': -1, 'chr': 'chr1'})
             'GT'
 
-            >>> f.index
-            {'chr3': (160, 3760), 'chr2': (80, 160), 'chr1': (0, 80)}
+            >>> sorted(f.index.items())
+            [('chr1', (0, 80)), ('chr2', (80, 160)), ('chr3', (160, 3760))]
 
         NOTE: these 2 are reverse-complement-ary because of strand
         #>>> f.sequence({'start':10, 'stop':12, 'strand': -1, 'chr': 'chr1'})
@@ -215,7 +219,3 @@ class Fasta(dict):
                 seq += fasta[start - int(one_based):stop]
             return seq
         return None
-
-    def iteritems(self):
-        for k in self.keys():
-            yield k, self[k]

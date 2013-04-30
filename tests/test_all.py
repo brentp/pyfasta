@@ -233,7 +233,7 @@ def check_array_copy(f):
     c = f['chr3'][1:5]
     assert c == old
 
-    assert a[1:5].tostring() == 'NNNN', a[1:5].tostring()
+    assert a[1:5].tostring().decode('ascii') == 'NNNN', a[1:5].tostring().decode('ascii')
 
 def check_one_based(f):
     assert f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9})  == 'CTGACTGA'
