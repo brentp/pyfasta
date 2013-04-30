@@ -108,7 +108,7 @@ def split(args):
     if options.header:
         names = dict([(seqid, options.header % \
                       dict(fasta=f.fasta_name, seqid=seqid)) \
-                                       for seqid in f.keys()])
+                                       for seqid in f.iterkeys()])
         """
         if len(names) > 0:
             assert names[0][1] != names[1][1], ("problem with header format", options.header)
@@ -144,7 +144,7 @@ def with_kmers(f, names, k, overlap):
     """
     fhs = [open(name, 'wb') for name in names]
     i = 0
-    for seqid in f.keys():
+    for seqid in f.iterkeys():
         seq = f[seqid]
         for (start0, subseq) in Fasta.as_kmers(seq, k, overlap=overlap):
 
@@ -161,7 +161,7 @@ def without_kmers(f, names):
     """
     fhs = [open(name, 'wb') for name in names]
     name2fh = dict([(fh.name, fh) for fh in fhs])
-    items = sorted([(key, len(f[key])) for key in f.keys()], 
+    items = sorted([(key, len(f[key])) for key in f.iterkeys()],
                    key=operator.itemgetter(1))
 
     l1 = len(items) - 1
