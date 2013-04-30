@@ -122,6 +122,14 @@ class Fasta(dict):
         self.chr[i] = self.record_class(self.prepared, c[0], c[1])
         return self.chr[i]
 
+    def items(self):
+        # TODO improve this. It's necessary for Python 3 since the items()
+        # method directly uses the underlying dict's data.
+        items = []
+        for key in self.index.keys():
+            items.append((key, self[key]))
+        return items
+
     def sequence(self, f, asstring=True, auto_rc=True
             , exon_keys=None, one_based=True):
         """
