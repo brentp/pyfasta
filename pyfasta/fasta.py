@@ -1,5 +1,6 @@
 import string
 import os.path
+from collections import Mapping
 import numpy as np
 
 from records import NpyFastaRecord
@@ -22,7 +23,7 @@ class DuplicateHeaderException(Exception):
     def __init__(self, header):
         Exception.__init__(self, 'headers must be unique: %s is duplicated' % header)
 
-class Fasta(dict):
+class Fasta(Mapping):
     def __init__(self, fasta_name, record_class=NpyFastaRecord,
                 flatten_inplace=False, key_fn=None):
         """
@@ -102,14 +103,8 @@ class Fasta(dict):
         # might not work for all backends?
         return len(self.index)
 
-    def iterkeys(self):
-        for k in self.index.iterkeys(): yield k
-
-    def keys(self):
-        return self.index.keys()
-
-    def __contains__(self, key):
-        return key in self.index
+    def __iter__(self):
+        return iter(self.index)
 
     def __getitem__(self, i):
         # this implements the lazy loading
@@ -121,14 +116,6 @@ class Fasta(dict):
         c = self.index[i]
         self.chr[i] = self.record_class(self.prepared, c[0], c[1])
         return self.chr[i]
-
-    def items(self):
-        # TODO improve this. It's necessary for Python 3 since the items()
-        # method directly uses the underlying dict's data.
-        items = []
-        for key in self.index.keys():
-            items.append((key, self[key]))
-        return items
 
     def sequence(self, f, asstring=True, auto_rc=True
             , exon_keys=None, one_based=True):
@@ -232,7 +219,3 @@ class Fasta(dict):
                 seq += fasta[start - int(one_based):stop]
             return seq
         return None
-
-    def iteritems(self):
-        for k in self.keys():
-            yield k, self[k]

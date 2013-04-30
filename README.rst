@@ -12,7 +12,7 @@ pyfasta: pythonic access to fasta sequence files.
 Implementation
 ==============
 
-Requires Python >= 2.5. Stores a flattened version of the fasta file without 
+Requires Python >= 2.6. Stores a flattened version of the fasta file without
 spaces or headers and uses either a mmap of numpy binary format or fseek/fread so the
 *sequence data is never read into memory*. Saves a pickle (.gdx) of the start, stop 
 (for fseek/mmap) locations of each header in the fasta file for internal use.
