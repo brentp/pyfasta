@@ -55,7 +55,7 @@ class FastaRecord(object):
                 return idx, flat
 
         idx = {}
-        flatfh = open(f + klass.ext, 'wb')
+        flatfh = open(f + klass.ext, 'w')
         for i, (seqid, seq) in enumerate(seqinfo_generator):
             if flatten_inplace:
                 if i == 0:
@@ -90,16 +90,16 @@ class FastaRecord(object):
         os.rename(flat_name, fasta_name)
         # still need the flattend file to show
         # it's current.
-        flatfh = open(fasta_name + klass.ext, 'wb')
+        flatfh = open(fasta_name + klass.ext, 'w')
         flatfh.write(MAGIC)
         flatfh.close()
 
 
-    
+
     @classmethod
     def modify_flat(klass, flat_file):
-        return open(flat_file, 'rb')
-    
+        return open(flat_file, 'r')
+
     def _adjust_slice(self, islice):
         l = len(self)
         if not islice.start is None and islice.start < 0:
@@ -271,7 +271,7 @@ try:
 
 
             db = HDB(f + klass.idx, tc.HDBOWRITER | tc.HDBOCREAT)
-            flatfh = open(f + klass.ext, 'wb')
+            flatfh = open(f + klass.ext, 'w')
             for i, (seqid, seq) in enumerate(seqinfo_generator):
                 if flatten_inplace:
                     if i == 0:
