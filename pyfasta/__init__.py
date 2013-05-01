@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 from fasta import Fasta, complement, DuplicateHeaderException
 from records import *
@@ -23,15 +24,15 @@ def main():
         pyfasta extract --help
     """        
     if len(sys.argv) == 1:
-        print help
+        print(help)
         sys.exit()
 
     action = sys.argv[1]
 
     sglobals = globals()
     if not action in sglobals:
-        print "%s not a valid action" % action
-        print help
+        print("%s not a valid action" % action)
+        print(help)
         sys.exit()
     
     globals()[action](sys.argv[2:])
@@ -74,8 +75,8 @@ def info(args):
         else:
             info.sort()
 
-        print "\n" + fasta
-        print "=" * len(fasta)
+        print("\n" + fasta)
+        print("=" * len(fasta))
         for k, l in info:
             gc = ""
             if options.gc:
@@ -84,12 +85,12 @@ def info(args):
                 c = seq.count('C')
                 gc = 100.0 * (g + c) / float(l)
                 gc = "gc:%.2f%%" % gc
-            print (">%s length:%i " % (k, l)) + gc
+            print((">%s length:%i " % (k, l)) + gc)
 
         if total_len > 1000000:
             total_len = "%.3fM" % (total_len / 1000000.)
-        print
-        print "%s basepairs in %i sequences" % (total_len, nseqs)
+        print()
+        print("%s basepairs in %i sequences" % (total_len, nseqs))
 
 def flatten(args):
     """
@@ -132,8 +133,8 @@ def extract(args):
     for seqname in seqs:
         seq = f[seqname]
         if options.header:
-            print ">%s" % seqname
-        print seq
+            print(">%s" % seqname)
+        print(seq)
 
 
 if __name__ == "__main__":

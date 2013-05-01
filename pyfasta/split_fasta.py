@@ -1,3 +1,4 @@
+from __future__ import print_function
 from pyfasta import Fasta
 import operator
 import collections
@@ -47,8 +48,8 @@ def newnames(oldname, n, kmers=None, overlap=None, header=None):
     else:
         width = len(str(n))
         names = [pattern % str(i).rjust(width, '0') for i in range(n)]
-    print >>sys.stderr, "creating new files:"
-    print >>sys.stderr, "\n".join(names)
+    print("creating new files:", file=sys.stderr)
+    print("\n".join(names), file=sys.stderr)
     return names
 
 
@@ -57,8 +58,8 @@ def print_to_fh(fh, fasta, lens, seqinfo):
     lens[fh.name] += seqlen
     f = fasta
     assert len(str(f[key])) == seqlen, (key, seqlen, len(str(f[key])))
-    print >>fh, ">%s" % key
-    print >>fh, str(f[key])
+    print(">%s" % key, file=fh)
+    print(str(f[key]), file=fh)
 
 
 def format_kmer(seqid, start):
@@ -132,8 +133,8 @@ def with_header_names(f, names):
     """
     for seqid, name in names.iteritems():
         with open(name, 'w') as fh:
-            print >>fh, ">%s" % seqid
-            print >>fh, str(f[seqid])
+            print(">%s" % seqid, file=fh)
+            print(str(f[seqid]), file=fh)
 
 def with_kmers(f, names, k, overlap):
     """
@@ -148,8 +149,8 @@ def with_kmers(f, names, k, overlap):
         for (start0, subseq) in Fasta.as_kmers(seq, k, overlap=overlap):
 
             fh = fhs[i % len(fhs)]
-            print >>fh, ">%s" % format_kmer(seqid, start0)
-            print >>fh, subseq
+            print(">%s" % format_kmer(seqid, start0), file=fh)
+            print(subseq, file=fh)
             i += 1
     for fh in fhs:
         fh.close()
