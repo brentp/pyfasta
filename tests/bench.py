@@ -1,3 +1,4 @@
+from itertools import islice
 import sys
 import os
 sys.path.insert(0, os.path.abspath("."))
@@ -22,7 +23,7 @@ def make_long_fasta(filename="t.fasta", nrecs=2500, seqlen=SEQLEN):
 
 def read(f, nreads=40000, seqlen=SEQLEN):
 
-    for k in f.keys()[:10]:
+    for k in islice(f.iterkeys(), 10):
         for i in range(nreads):
             start = random.randint(0, seqlen)
             end = min(seqlen, start + random.randint(1000, 2000))
