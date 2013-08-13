@@ -29,7 +29,7 @@ class Fasta(Mapping):
         """
             >>> from pyfasta import Fasta, FastaRecord
 
-            >>> f = Fasta('tests/data/three_chrs.fasta', 
+            >>> f = Fasta('tests/data/three_chrs.fasta',
             ...                          record_class=FastaRecord)
             >>> sorted(f.keys())
             ['chr1', 'chr2', 'chr3']
@@ -73,7 +73,7 @@ class Fasta(Mapping):
         fh = open(self.fasta_name, 'r')
         # do the flattening (remove newlines)
         # check of unique-ness of headers.
-        seen_headers = {}
+        seen_headers = set()
         header = None
         seqs = None
         for line in fh:
@@ -83,7 +83,7 @@ class Fasta(Mapping):
                 if seqs is not None:
                     if header in seen_headers:
                         raise DuplicateHeaderException(header)
-                    seen_headers[header] = None
+                    seen_headers.add(header)
                     yield header, "".join(seqs)
 
                 header = line[1:].strip()
@@ -93,7 +93,7 @@ class Fasta(Mapping):
             else:
                 seqs.append(line)
 
-        if seqs != []:
+        if seqs:
             if header in seen_headers:
                 raise DuplicateHeaderException(header)
             yield header, "".join(seqs)
@@ -156,7 +156,7 @@ class Fasta(Mapping):
             >>> f['chr3'][:][-10:]
             'CGCACGCTAC'
 
-        
+
         a feature can have exons:
             >>> feat = dict(start=9, stop=19, strand=1, chr='chr1'
             ...    , exons=[(9,11), (13, 15), (17, 19)])
@@ -189,7 +189,7 @@ class Fasta(Mapping):
             sequence = self._seq_from_keys(f, fasta, exon_keys, one_based=one_based)
 
         if sequence is None:
-            start = f['start'] - int(one_based) 
+            start = f['start'] - int(one_based)
             sequence = fasta[start: f['stop']]
 
         if auto_rc and f.get('strand') in (-1, '-1', '-'):

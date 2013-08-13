@@ -1,3 +1,5 @@
+from __future__ import print_function
+from itertools import islice
 import sys
 import os
 sys.path.insert(0, os.path.abspath("."))
@@ -14,15 +16,15 @@ def make_long_fasta(filename="t.fasta", nrecs=2500, seqlen=SEQLEN):
         #0123456789"
     s = "ACTGACTGAC"
     for i in range(nrecs):
-        print >>fh, ">header%i" % i
-        print >>fh, (s * (seqlen/10))
+        print(">header%i" % i, file=fh)
+        print(s * (seqlen/10), file=fh)
 
     fh.close()
     return filename
 
 def read(f, nreads=40000, seqlen=SEQLEN):
 
-    for k in f.keys()[:10]:
+    for k in islice(f.iterkeys(), 10):
         for i in range(nreads):
             start = random.randint(0, seqlen)
             end = min(seqlen, start + random.randint(1000, 2000))
@@ -35,12 +37,12 @@ def main():
 
     t = time.time()
     f = Fasta(fa)
-    print "flatten:", time.time() - t 
+    print("flatten:", time.time() - t)
 
     
     t = time.time()
     read(f)
-    print "read:", time.time() - t 
+    print("read:", time.time() - t)
 
      
 

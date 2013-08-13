@@ -97,7 +97,7 @@ def check_reload(klass, fasta_name):
 
 
 def check_full_slice(f):
-    for k in f.keys():
+    for k in f.iterkeys():
         assert str(f[k]) == f[k][:]
         assert str(f[k]) == f[k][0:]
 

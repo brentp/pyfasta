@@ -85,9 +85,8 @@ class FastaRecord(object):
         os.rename(flat_name, fasta_name)
         # still need the flattend file to show
         # it's current.
-        flatfh = open(fasta_name + klass.ext, 'w')
-        flatfh.write(MAGIC)
-        flatfh.close()
+        with open(fasta_name + klass.ext, 'w') as flatfh:
+            flatfh.write(MAGIC)
 
 
 
