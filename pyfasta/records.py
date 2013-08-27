@@ -57,11 +57,11 @@ class FastaRecord(object):
             for i, (seqid, seq) in enumerate(seqinfo_generator):
                 if flatten_inplace:
                     if i == 0:
-                        flatfh.write('>%s\n' % seqid)
+                        flatfh.write(bytes('>%s\n' % seqid,'UTF-8'))
                     else:
-                        flatfh.write('\n>%s\n' % seqid)
+                        flatfh.write(bytes('\n>%s\n' % seqid,'UTF-8'))
                 start = flatfh.tell()
-                flatfh.write(seq)
+                flatfh.write(bytes(seq),'UTF-8')
                 stop = flatfh.tell()
                 idx[seqid] = (start, stop)
 
