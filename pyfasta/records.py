@@ -61,7 +61,7 @@ class FastaRecord(object):
                     else:
                         flatfh.write(bytes('\n>%s\n' % seqid,'UTF-8'))
                 start = flatfh.tell()
-                flatfh.write(bytes(seq),'UTF-8')
+                flatfh.write(bytes(seq,'UTF-8'))
                 stop = flatfh.tell()
                 idx[seqid] = (start, stop)
 
