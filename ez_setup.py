@@ -63,7 +63,7 @@ md5_data = {
     'setuptools-0.6c9-py2.6.egg': 'ca37b1ff16fa2ede6e19383e7b59245a',
 }
 
-import sys, os
+import os
 from hashlib import md5
 
 def _validate_md5(egg_name, data):
@@ -100,7 +100,7 @@ def use_setuptools(
     try:
         import pkg_resources
     except ImportError:
-        return do_download()       
+        return do_download()
     try:
         pkg_resources.require("setuptools>="+version); return
     except pkg_resources.VersionConflict as e:
@@ -129,11 +129,11 @@ def download_setuptools(
     with a '/'). `to_dir` is the directory where the egg will be downloaded.
     `delay` is the number of seconds to pause before an actual download attempt.
     """
-    import urllib2, shutil
+    import urllib2
     egg_name = "setuptools-%s-py%s.egg" % (version,sys.version[:3])
     url = download_base + egg_name
     saveto = os.path.join(to_dir, egg_name)
-    src = dst = None
+    src = None
     if not os.path.exists(saveto):  # Avoid repeated downloads
         try:
             from distutils import log
@@ -159,10 +159,10 @@ and place it in this directory before rerunning this script.)
             # Read/write all in one block, so we don't create a corrupt file
             # if the download is interrupted.
             data = _validate_md5(egg_name, src.read())
-            dst = open(saveto,"wb"); dst.write(data)
+            with open(saveto, "wb") as dst:
+                dst.write(data)
         finally:
             if src: src.close()
-            if dst: dst.close()
     return os.path.realpath(saveto)
 
 
@@ -248,9 +248,8 @@ def update_md5(filenames):
 
     for name in filenames:
         base = os.path.basename(name)
-        f = open(name,'rb')
-        md5_data[base] = md5(f.read()).hexdigest()
-        f.close()
+        with open(name, 'rb') as f:
+            md5_data[base] = md5(f.read()).hexdigest()
 
     data = ["    %r: %r,\n" % it for it in md5_data.iteritems()]
     data.sort()
@@ -258,7 +257,8 @@ def update_md5(filenames):
 
     import inspect
     srcfile = inspect.getsourcefile(sys.modules[__name__])
-    f = open(srcfile, 'rb'); src = f.read(); f.close()
+    with open(srcfile) as f:
+        src = f.read()
 
     match = re.search("\nmd5_data = {\n([^}]+)}", src)
     if not match:
@@ -266,9 +266,8 @@ def update_md5(filenames):
         sys.exit(2)
 
     src = src[:match.start(1)] + repl + src[match.end(1):]
-    f = open(srcfile,'w')
-    f.write(src)
-    f.close()
+    with open(srcfile, 'w') as f:
+        f.write(src)
 
 
 if __name__=='__main__':
