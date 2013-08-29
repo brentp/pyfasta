@@ -226,14 +226,14 @@ def check_slice(f):
 
 def check_array_copy(f):
     # the array is definitely a copy...
-    a = np.array(f['chr3'])
+    a = np.array(f['chr3'], np.dtype('S1'))
     old = f['chr3'][1:5]
     assert (a.shape[0] == 3600)
     a[1:5] = np.array('N', dtype='S1')
     c = f['chr3'][1:5]
     assert c == old
 
-    assert a[1:5].tostring().decode('ascii') == 'NNNN', a[1:5].tostring().decode('ascii')
+    assert a[1:5].tostring().decode() == 'NNNN', a[1:5].tostring().decode()
 
 def check_one_based(f):
     assert f.sequence({'chr': 'chr1', 'start': 2, 'stop': 9})  == 'CTGACTGA'
