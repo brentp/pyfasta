@@ -1,5 +1,9 @@
 Changes
 =======
+0.5.0
+-----
+python 3 compatibility thanks to mruffalo
+
 0.4.5
 -----
 pyfasta split can handle > 52 files. (thanks Devtulya)

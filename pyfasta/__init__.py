@@ -22,7 +22,7 @@ def main():
         pyfasta [action] --help
     e.g.:
         pyfasta extract --help
-    """        
+    """
     if len(sys.argv) == 1:
         print(help)
         sys.exit()
@@ -34,7 +34,7 @@ def main():
         print("%s not a valid action" % action)
         print(help)
         sys.exit()
-    
+
     globals()[action](sys.argv[2:])
 
 def info(args):
@@ -53,7 +53,7 @@ def info(args):
    print headers and lengths of the given fasta file in order of length. e.g.:
         pyfasta info --gc some.fasta""")
 
-    parser.add_option("-n", "--n", type="int", dest="nseqs", 
+    parser.add_option("-n", "--n", type="int", dest="nseqs",
                       help="max number of records to print. use -1 for all",
                       default=20)
     parser.add_option("--gc", dest="gc", help="show gc content",
