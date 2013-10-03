@@ -107,12 +107,8 @@ class Fasta(Mapping):
         return iter(self.index)
 
     def __getitem__(self, i):
-        # this implements the lazy loading
-        if self.key_fn is not None:
-            i = self.key_fn(i)
         if i in self.chr:
             return self.chr[i]
-
         c = self.index[i]
         self.chr[i] = self.record_class(self.prepared, c[0], c[1])
         return self.chr[i]

@@ -48,6 +48,8 @@ def test_classes():
 
             yield check_keyfn, 'tests/data/key.fasta', klass, inplace
 
+            yield check_keyfn2, 'tests/data/key.fasta', klass, inplace
+
             yield check_reload, klass, fasta_name
 
             yield check_duplicates, klass, inplace
@@ -80,6 +82,15 @@ def check_keyfn(path, klass, inplace):
     fix(path)
     ff = Fasta(path, record_class=klass, flatten_inplace=inplace)
     assert sorted(ff.keys()) == ['a extra', 'b extra', 'c extra'], (ff.keys(), klass)
+    fix(path)
+
+def check_keyfn2(path, klass, inplace):
+    f = Fasta(path, record_class=klass, flatten_inplace=inplace, key_fn=lambda
+            key: "-".join(key.split()))
+
+    assert sorted(f.keys()) == ['a-extra', 'b-extra', 'c-extra'], f.keys()
+
+    assert f['a-extra']
     fix(path)
 
 

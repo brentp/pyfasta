@@ -23,7 +23,7 @@ class FastaRecord(object):
 
     @classmethod
     def is_current(klass, fasta_name):
-        utd = is_up_to_date(fasta_name + klass.idx, fasta_name) 
+        utd = is_up_to_date(fasta_name + klass.idx, fasta_name)
         if not utd: return False
         return is_up_to_date(fasta_name + klass.ext, fasta_name)
 
@@ -138,7 +138,7 @@ class FastaRecord(object):
             if islice.step in (1, None):
                 return fh.read(self.stop - self.start)
             return fh.read(self.stop - self.start)[::islice.step]
-        
+
         istart, istop = self._adjust_slice(islice)
         if istart is None: return ""
         l = istop - istart
