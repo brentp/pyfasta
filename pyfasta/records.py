@@ -140,9 +140,9 @@ class FastaRecord(object):
             return fh.read(self.stop - self.start)[::islice.step]
 
         istart, istop = self._adjust_slice(islice)
-        if istart is None: return ""
+        if istart is None: return u""
         l = istop - istart
-        if l == 0: return ""
+        if l == 0: return u""
 
 
         fh.seek(istart)
