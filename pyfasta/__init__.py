@@ -43,9 +43,9 @@ def info(args):
     <BLANKLINE>
     tests/data/three_chrs.fasta
     ===========================
-    >chr3 length:3600 
-    >chr2 length:80 
-    >chr1 length:80 
+    >chr3 length:3600
+    >chr2 length:80
+    >chr1 length:80
     <BLANKLINE>
     3760 basepairs in 3 sequences
     """
@@ -70,7 +70,7 @@ def info(args):
         total_len = sum(l for k, l in info)
         nseqs = len(f)
         if options.nseqs > -1:
-            info = sorted(info,  key=operator.itemgetter(1), reverse=True)
+            info = sorted(info,  key=operator.itemgetter(1, 0), reverse=True)
             info = info[:options.nseqs]
         else:
             info.sort()
@@ -85,7 +85,7 @@ def info(args):
                 c = seq.count('C')
                 gc = 100.0 * (g + c) / float(l)
                 gc = "gc:%.2f%%" % gc
-            print((">%s length:%i " % (k, l)) + gc)
+            print((">%s length:%i" % (k, l)) + gc)
 
         if total_len > 1000000:
             total_len = "%.3fM" % (total_len / 1000000.)
