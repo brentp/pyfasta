@@ -1,6 +1,7 @@
 import string
 import os.path
 from collections import Mapping
+import sys
 import numpy as np
 
 from records import NpyFastaRecord
@@ -14,8 +15,22 @@ except AttributeError:
     # 3.x
     maketrans = str.maketrans
 
-_complement = maketrans(u'ATCGatcgNnXx', u'TAGCtagcNnXx').decode('latin-1')
-complement  = lambda s: s.translate(_complement)
+_complement = maketrans('ATCGatcgNnXx', 'TAGCtagcNnXx')
+# Python 2: string.maketrans returns a bytes object of length 256,
+#   that is used as a lookup table to translate bytes to other bytes.
+# Python 3: str.maketrans returns a dict mapping Unicode code points
+#   to other Unicode code points. Can't use a fully-allocated lookup
+#   table since it would have to be of size `sys.maxunicode`, which
+#   is equal to 1114111 on wide builds of <= 3.2 and all builds of
+#   Python >= 3.3.
+# In Python 2, it's safe to use a unicode object as the translation
+# table; this causes str.translate to return a unicode object instead
+# of a str. This is safe as long as the string that you're translating
+# can be decoded as ASCII, and will fail with a UnicodeDecodeError
+# otherwise.
+if sys.version_info[0] < 3:
+    _complement = _complement.decode('latin-1')
+complement = lambda s: s.translate(_complement)
 
 class FastaNotFound(Exception): pass
 
