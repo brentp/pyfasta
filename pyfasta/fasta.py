@@ -1,6 +1,8 @@
+from __future__ import print_function
 import string
 import os.path
 from collections import Mapping
+import sys
 import numpy as np
 
 from records import NpyFastaRecord
@@ -14,8 +16,22 @@ except AttributeError:
     # 3.x
     maketrans = str.maketrans
 
-_complement = maketrans(u'ATCGatcgNnXx', u'TAGCtagcNnXx').decode('latin-1')
-complement  = lambda s: s.translate(_complement)
+_complement = maketrans('ATCGatcgNnXx', 'TAGCtagcNnXx')
+# Python 2: string.maketrans returns a bytes object of length 256,
+#   that is used as a lookup table to translate bytes to other bytes.
+# Python 3: str.maketrans returns a dict mapping Unicode code points
+#   to other Unicode code points. Can't use a fully-allocated lookup
+#   table since it would have to be of size `sys.maxunicode`, which
+#   is equal to 1114111 on wide builds of <= 3.2 and all builds of
+#   Python >= 3.3.
+# In Python 2, it's safe to use a unicode object as the translation
+# table; this causes str.translate to return a unicode object instead
+# of a str. This is safe as long as the string that you're translating
+# can be decoded as ASCII, and will fail with a UnicodeDecodeError
+# otherwise.
+if sys.version_info[0] < 3:
+    _complement = _complement.decode('latin-1')
+complement = lambda s: s.translate(_complement)
 
 class FastaNotFound(Exception): pass
 
@@ -39,12 +55,12 @@ class Fasta(Mapping):
             FastaRecord('tests/data/three_chrs.fasta.flat', 0..80)
 
         extract sequence with normal python syntax
-            >>> f['chr1'][:10]
-            'ACTGACTGAC'
+            >>> print(f['chr1'][:10])
+            ACTGACTGAC
 
         take the first basepair in each codon...
-            >>> f['chr1'][0:10:3]
-            'AGTC'
+            >>> print(f['chr1'][0:10:3])
+            AGTC
 
         """
         if not os.path.exists(fasta_name):
@@ -128,11 +144,11 @@ class Fasta(Mapping):
 
             >>> from pyfasta import Fasta
             >>> f = Fasta('tests/data/three_chrs.fasta')
-            >>> f.sequence({'start':1, 'stop':2, 'strand':1, 'chr': 'chr1'})
-            u'AC'
+            >>> print(f.sequence({'start':1, 'stop':2, 'strand':1, 'chr': 'chr1'}))
+            AC
 
-            >>> f.sequence({'start':1, 'stop':2, 'strand': -1, 'chr': 'chr1'})
-            u'GT'
+            >>> print(f.sequence({'start':1, 'stop':2, 'strand': -1, 'chr': 'chr1'}))
+            GT
 
             >>> sorted(f.index.items())
             [('chr1', (0, 80)), ('chr2', (80, 160)), ('chr3', (160, 3760))]
@@ -140,17 +156,17 @@ class Fasta(Mapping):
         NOTE: these 2 are reverse-complement-ary because of strand
         #>>> f.sequence({'start':10, 'stop':12, 'strand': -1, 'chr': 'chr1'})
             'CAG'
-            >>> f.sequence({'start':10, 'stop':12, 'strand': 1, 'chr': 'chr1'})
-            u'CTG'
+            >>> print(f.sequence({'start':10, 'stop':12, 'strand': 1, 'chr': 'chr1'}))
+            CTG
 
 
-            >>> f.sequence({'start':10, 'stop':12, 'strand': -1, 'chr': 'chr3'})
-            u'TGC'
-            >>> f.sequence({'start':10, 'stop':12, 'strand': 1, 'chr': 'chr3'})
-            u'GCA'
+            >>> print(f.sequence({'start':10, 'stop':12, 'strand': -1, 'chr': 'chr3'}))
+            TGC
+            >>> print(f.sequence({'start':10, 'stop':12, 'strand': 1, 'chr': 'chr3'}))
+            GCA
 
-            >>> f['chr3'][:][-10:]
-            u'CGCACGCTAC'
+            >>> print(f['chr3'][:][-10:])
+            CGCACGCTAC
 
 
         a feature can have exons:
@@ -159,14 +175,14 @@ class Fasta(Mapping):
 
         by default, it just returns the full sequence between start
         and stop.
-            >>> f.sequence(feat)
-            u'ACTGACTGACT'
+            >>> print(f.sequence(feat))
+            ACTGACTGACT
 
         but if exon_keys is set to an iterable, it will search for
         those keys and will use the first to create a sequence and
         return the concatenated result.
-            >>> f.sequence(feat, exon_keys=('rnas', 'exons'))
-            u'ACTACTACT'
+            >>> print(f.sequence(feat, exon_keys=('rnas', 'exons')))
+            ACTACTACT
 
         Note that sequence is 2 characters shorter than the entire
         feature, to account for the introns at base-pairs 12 and 16.
@@ -175,8 +191,8 @@ class Fasta(Mapping):
         fine one, so it continued on to 'exons'. If it doesn't find
         any of the exon keys, it will fall back on the start, stop of
         the feature:
-            >>> f.sequence(feat, exon_keys=('fake', 'also_fake'))
-            u'ACTGACTGACT'
+            >>> print(f.sequence(feat, exon_keys=('fake', 'also_fake')))
+            ACTGACTGACT
         """
         assert 'chr' in f and f['chr'] in self, (f, f['chr'], self.keys())
         fasta    = self[f['chr']]
