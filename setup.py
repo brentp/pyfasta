@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-version = '0.5.1'
+version = '0.5.2'
 
 # Run 2to3 builder if we're on Python 3.x, from
 #   http://wiki.python.org/moin/PortingPythonToPy3k
