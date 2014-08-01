@@ -2,10 +2,14 @@
 pyfasta: pythonic access to fasta sequence files.
 ==================================================
 
+**NOTE** : unless you have specific reason to use pyfasta, I suggest to use `pyfaidx <https://github.com/mdshw5/pyfaidx>`_ 
+
 
 :Author: Brent Pedersen (brentp)
 :Email: bpederse@gmail.com
 :License: MIT
+
+
 
 .. contents ::
 
